@@ -1,0 +1,32 @@
+Main data types:
+- signed 32-bit integer (I)
+- pair of signed 32-bit integers (V)
+
+Functions:
+- lit<i32>() -> I
+- x(V) -> I
+- y(V) -> I
+- channel -> I
+- un<UnaryOperator>(I) -> I
+- bin<BinaryOperator>(I, I) -> I
+- bin<BinaryOperator>(V) -> I
+
+- pos() -> V
+- un<UnaryOperator>(V) -> V
+- bin<BinaryOperator>(V, V) -> V
+
+Binary operators:
+- add, sum, mul
+
+Unary operators:
+- square
+
+- abs
+- neg
+- mod by small constant
+- div by small constant
+
+Unary operators that return 0..256:
+- mod256
+- trunc
+- scale
