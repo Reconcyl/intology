@@ -1,10 +1,12 @@
 mod utils;
 mod expression_tree;
+mod gen_expr;
+mod display_expr;
 
 pub use expression_tree::{IExpr, VExpr, Unary, Binary};
 
 fn main() {
-    let formula = IExpr::Scale256(Box::new(IExpr::PixelX));
-    let test_values = [(0, 0), (1, 1), (4, 4)];
-    println!("{:?}", formula.eval_batch(test_values.iter().copied()).collect::<Vec<_>>());
+    let mut rng = rand::thread_rng();
+    let expr = gen_expr::Parameters::default().gen_expr(&mut rng, 5);
+    println!("{}", expr);
 }

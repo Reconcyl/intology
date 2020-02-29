@@ -17,10 +17,10 @@ pub enum IExpr {
 /// An expression that returns a pair of 32-bit integers.
 pub enum VExpr {
     Pixel,
+    Swap(Box<VExpr>),
     BinaryI(Binary, Binary, Box<IExpr>, Box<IExpr>),
     UnaryV(Unary, Box<VExpr>),
     BinaryV(Binary, Box<VExpr>, Box<VExpr>),
-    Swap(Box<VExpr>),
 }
 
 #[derive(Clone, Copy)]
@@ -192,6 +192,14 @@ impl VExpr {
                 e.push(e.pos.0);
                 e.push(e.pos.1);
             }),
+            Swap(sub_e) => {
+                sub_e.eval_on_batch(batch);
+                batch.each(|e| {
+                    let (a, b) = e.pop_2();
+                    e.push(b);
+                    e.push(a);
+                })
+            }
             BinaryI(op_1, op_2, e_1, e_2) => {
                 e_1.eval_on_batch(batch);
                 e_2.eval_on_batch(batch);
@@ -223,14 +231,6 @@ impl VExpr {
                     let new_2 = a_2.eval_binary(b_2, *op);
                     e.push(new_1);
                     e.push(new_2);
-                })
-            }
-            Swap(sub_e) => {
-                sub_e.eval_on_batch(batch);
-                batch.each(|e| {
-                    let (a, b) = e.pop_2();
-                    e.push(b);
-                    e.push(a);
                 })
             }
         }
