@@ -1,6 +1,6 @@
 use rand::Rng;
 
-use crate::expression_tree::{IExpr, VExpr, Unary, Binary};
+use crate::expr::{IExpr, VExpr, Unary, Binary};
 use crate::utils::{self, weighted_choice};
 
 pub struct Parameters {

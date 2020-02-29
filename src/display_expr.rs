@@ -1,6 +1,6 @@
 use std::fmt::{self, Display, Formatter};
 
-use crate::expression_tree::{IExpr, VExpr, Unary, Binary};
+use crate::expr::{IExpr, VExpr, Unary, Binary};
 
 impl Display for Unary {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
