@@ -1,14 +1,10 @@
-use std::collections::HashMap;
-
 mod utils;
+mod expression_tree;
+
+pub use expression_tree::{IExpr, VExpr, Unary, Binary};
 
 fn main() {
-    let mut rng = rand::thread_rng();
-    let mut c = [0u32; 256];
-
-    for _ in 0..1_000_000 {
-        c[utils::small_positive(&mut rng) as usize] += 1;
-    }
-
-    println!("{:?}", c.iter().enumerate().filter(|&(_, &n)| n != 0).collect::<Vec<_>>());
+    let formula = IExpr::Scale256(Box::new(IExpr::PixelX));
+    let test_values = [(0, 0), (1, 1), (4, 4)];
+    println!("{:?}", formula.eval_batch(test_values.iter().copied()).collect::<Vec<_>>());
 }

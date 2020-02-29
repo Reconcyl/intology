@@ -28,3 +28,7 @@ pub fn small_positive<R: Rng>(rng: &mut R) -> u8 {
         sum.abs() as u8
     }
 }
+
+pub fn clamp(min: i32, max: i32, n: i32) -> i32 {
+    std::cmp::min(max, std::cmp::max(min, n))
+}

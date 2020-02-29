@@ -1,11 +1,13 @@
+We might want to use an arena with indices instead of storing recursive expression trees on the heap.
+
 Main data types:
 - signed 32-bit integer (I)
 - pair of signed 32-bit integers (V)
 
 Functions:
 - lit<i32>() -> I
-- x(V) -> I
-- y(V) -> I
+- x() -> I
+- y() -> I
 - channel -> I
 - un<UnaryOperator>(I) -> I
 - bin<BinaryOperator>(I, I) -> I
