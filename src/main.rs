@@ -17,4 +17,5 @@ fn main() {
     let file = std::fs::File::create(filename).unwrap();
     expr.write_image_data(file, 256, 256, 4);
     println!("Seed: {:?}", seed);
+    println!("Expr: {}", expr);
 }

@@ -38,6 +38,18 @@ impl Parameters {
         utils::perturb(rng, &mut self.binary_weights);
     }
 
+    fn gen_literal<R: Rng>(rng: &mut R) -> IExpr {
+        if rng.gen() {
+            IExpr::Rgb([
+                utils::small_positive(rng),
+                utils::small_positive(rng),
+                utils::small_positive(rng),
+            ])
+        } else {
+            IExpr::Lit(rng.gen())
+        }
+    }
+
     fn gen_unary<R: Rng>(&self, rng: &mut R) -> Unary {
         match weighted_choice(rng, &self.unary_weights) {
             0 => Unary::Square,
@@ -88,14 +100,14 @@ impl Parameters {
     fn gen_iexpr<R: Rng>(&self, rng: &mut R, max_depth: u8) -> IExpr {
         if max_depth == 0 {
             match weighted_choice(rng, &self.max_depth_iexpr_weights) {
-                0 => IExpr::Lit(rng.gen()),
+                0 => Self::gen_literal(rng),
                 1 => if rng.gen() { IExpr::PixelX } else { IExpr::PixelY }
                 2 => IExpr::Channel,
                 _ => unreachable!()
             }
         } else {
             match weighted_choice(rng, &self.iexpr_weights) {
-                0 => IExpr::Lit(rng.gen()),
+                0 => Self::gen_literal(rng),
                 1 => if rng.gen() { IExpr::PixelX } else { IExpr::PixelY }
                 2 => IExpr::Channel,
                 3 => IExpr::Scale256(Box::new(self.gen_iexpr(rng, max_depth - 1))),

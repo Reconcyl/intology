@@ -5,6 +5,7 @@ type Color = [i32; 3];
 /// An expression that returns a single 32-bit integer.
 pub enum IExpr {
     Lit(i32),
+    Rgb([u8; 3]),
     PixelX,
     PixelY,
     Channel,
@@ -250,6 +251,7 @@ impl IExpr {
         use IExpr::*;
         match self {
             Lit(n) => batch.each(|e| e.push(*n)),
+            Rgb([r, g, b]) => batch.each(|e| e.push([*r as i32, *g as i32, *b as i32])),
             PixelX => batch.each(|e| e.push(e.pos.0)),
             PixelY => batch.each(|e| e.push(e.pos.1)),
             Channel => batch.each(|e| e.push([-1, 0, 1])),

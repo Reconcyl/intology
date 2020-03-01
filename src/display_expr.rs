@@ -34,6 +34,7 @@ impl Display for IExpr {
         use IExpr::*;
         match self {
             Lit(n) => write!(f, "{}", n),
+            Rgb([r, g, b]) => write!(f, "{}/{}/{}", r, g, b),
             PixelX => write!(f, "x"),
             PixelY => write!(f, "y"),
             Channel => write!(f, "c"),
