@@ -61,6 +61,9 @@ pub enum Binary {
     Add,
     Sub,
     Mul,
+    BitAnd,
+    BitOr,
+    BitXor,
 }
 
 impl Binary {
@@ -70,6 +73,9 @@ impl Binary {
             Add => a.wrapping_add(b),
             Sub => a.wrapping_sub(b),
             Mul => a.wrapping_mul(b),
+            BitAnd => a & b,
+            BitOr => a | b,
+            BitXor => a ^ b,
         }
     }
 }

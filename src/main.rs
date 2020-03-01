@@ -1,6 +1,6 @@
 use rand::Rng;
 
-use rouille::{Request, Response, router, try_or_400};
+use rouille::{Response, router, try_or_400};
 
 use std::sync::Mutex;
 
@@ -70,7 +70,7 @@ impl ParamPool {
                 downvotes: 1,
                 params: self.entries[idx_1].params.mutate(&self.entries[idx_2].params, &mut rng),
             };
-            if self.entries.len() > 10 {
+            if self.entries.len() > 30 {
                 self.entries.remove(self.get_low_voted_idx(&mut rng));
             }
             self.entries.push(child);
@@ -81,7 +81,7 @@ impl ParamPool {
         let mut rng = rand::thread_rng();
         let idx = self.get_high_voted_idx(&mut rng);
         let params = &self.entries[idx].params;
-        (idx, params.gen_expr(&mut rng, 5))
+        (idx, params.gen_expr(&mut rng, 8, 3))
     }
 }
 

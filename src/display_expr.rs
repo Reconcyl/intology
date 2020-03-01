@@ -25,6 +25,9 @@ impl Display for Binary {
             Add => write!(f, "+"),
             Sub => write!(f, "-"),
             Mul => write!(f, "*"),
+            BitAnd => write!(f, "&"),
+            BitOr  => write!(f, "|"),
+            BitXor => write!(f, "^"),
         }
     }
 }
