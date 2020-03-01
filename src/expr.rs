@@ -16,6 +16,8 @@ pub enum IExpr {
     UnaryI(Unary, Box<IExpr>),
     BinaryI(Binary, Box<IExpr>, Box<IExpr>),
     BinaryV(Binary, Box<VExpr>),
+    IfThenElseI(Box<IExpr>, Box<IExpr>, Box<IExpr>),
+    IfThenElseV(Box<IExpr>, Box<VExpr>),
 }
 
 /// An expression that returns a pair of 32-bit integers.
@@ -26,6 +28,8 @@ pub enum VExpr {
     BinaryI(Binary, Binary, Box<IExpr>, Box<IExpr>),
     UnaryV(Unary, Box<VExpr>),
     BinaryV(Binary, Box<VExpr>, Box<VExpr>),
+    IfThenElseI(Box<IExpr>, Box<VExpr>, Box<VExpr>),
+    IfThenElseV(Box<VExpr>, Box<VExpr>, Box<VExpr>),
 }
 
 #[derive(Clone, Copy, Serialize, Deserialize)]
@@ -252,6 +256,50 @@ impl VExpr {
                     e.push(new_2);
                 })
             }
+            IfThenElseI(e_cond, e_then, e_else) => {
+                e_cond.eval_on_batch(batch);
+                e_then.eval_on_batch(batch);
+                e_else.eval_on_batch(batch);
+                batch.each(|e| {
+                    let (else_1, else_2) = e.pop_2();
+                    let (then_1, then_2) = e.pop_2();
+                    let cond = e.pop();
+                    e.push(crate::utils::array_zip_3(
+                        |c, t, e| if c > 0 { t } else { e },
+                        cond.rgb(),
+                        then_1.rgb(),
+                        else_1.rgb(),
+                    ));
+                    e.push(crate::utils::array_zip_3(
+                        |c, t, e| if c > 0 { t } else { e },
+                        cond.rgb(),
+                        then_2.rgb(),
+                        else_2.rgb(),
+                    ));
+                })
+            }
+            IfThenElseV(e_cond, e_then, e_else) => {
+                e_cond.eval_on_batch(batch);
+                e_then.eval_on_batch(batch);
+                e_else.eval_on_batch(batch);
+                batch.each(|e| {
+                    let (else_1, else_2) = e.pop_2();
+                    let (then_1, then_2) = e.pop_2();
+                    let (cond_1, cond_2) = e.pop_2();
+                    e.push(crate::utils::array_zip_3(
+                        |c, t, e| if c > 0 { t } else { e },
+                        cond_1.rgb(),
+                        then_1.rgb(),
+                        else_1.rgb(),
+                    ));
+                    e.push(crate::utils::array_zip_3(
+                        |c, t, e| if c > 0 { t } else { e },
+                        cond_2.rgb(),
+                        then_2.rgb(),
+                        else_2.rgb(),
+                    ));
+                })
+            }
         }
     }
 }
@@ -292,6 +340,37 @@ impl IExpr {
                     let new_val = a.eval_binary(b, *op);
                     e.push(new_val)
                 });
+            }
+            IfThenElseI(e_cond, e_then, e_else) => {
+                e_cond.eval_on_batch(batch);
+                e_then.eval_on_batch(batch);
+                e_else.eval_on_batch(batch);
+                batch.each(|e| {
+                    let (val_then, val_else) = e.pop_2();
+                    let val_cond = e.pop();
+                    let new_val = crate::utils::array_zip_3(
+                        |c, t, e| if c > 0 { t } else { e },
+                        val_cond.rgb(),
+                        val_then.rgb(),
+                        val_else.rgb(),
+                    );
+                    e.push(new_val);
+                })
+            }
+            IfThenElseV(e_cond, e_case) => {
+                e_cond.eval_on_batch(batch);
+                e_case.eval_on_batch(batch);
+                batch.each(|e| {
+                    let (val_then, val_else) = e.pop_2();
+                    let val_cond = e.pop();
+                    let new_val = crate::utils::array_zip_3(
+                        |c, t, e| if c > 0 { t } else { e },
+                        val_cond.rgb(),
+                        val_then.rgb(),
+                        val_else.rgb(),
+                    );
+                    e.push(new_val);
+                })
             }
         }
     }

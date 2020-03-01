@@ -60,3 +60,19 @@ pub fn perturb<R: Rng>(rng: &mut R, values: &mut [f32]) {
 pub fn clamp(min: i32, max: i32, n: i32) -> i32 {
     std::cmp::min(max, std::cmp::max(min, n))
 }
+
+pub fn array_zip_3<T>(
+    mut f: impl FnMut(T, T, T) -> T,
+    t_1: [T; 3],
+    t_2: [T; 3],
+    t_3: [T; 3],
+) -> [T; 3] {
+    let [t_1_0, t_1_1, t_1_2] = t_1;
+    let [t_2_0, t_2_1, t_2_2] = t_2;
+    let [t_3_0, t_3_1, t_3_2] = t_3;
+    [
+        f(t_1_0, t_2_0, t_3_0),
+        f(t_1_1, t_2_1, t_3_1),
+        f(t_1_2, t_2_2, t_3_2),
+    ]
+}

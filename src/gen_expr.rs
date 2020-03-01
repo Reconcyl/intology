@@ -7,11 +7,11 @@ use crate::utils::{self, weighted_choice};
 pub struct Parameters {
     root_iexpr_weights: [f32; 3],
     max_depth_iexpr_weights: [f32; 3],
-    min_depth_iexpr_weights: [f32; 4],
-    iexpr_weights: [f32; 7],
+    min_depth_iexpr_weights: [f32; 6],
+    iexpr_weights: [f32; 9],
 
-    min_depth_vexpr_weights: [f32; 4],
-    vexpr_weights: [f32; 5],
+    min_depth_vexpr_weights: [f32; 6],
+    vexpr_weights: [f32; 7],
 
     unary_weights: [f32; 8],
     binary_weights: [f32; 6],
@@ -22,11 +22,11 @@ impl Default for Parameters {
         Self {
             root_iexpr_weights: [1.0; 3],
             max_depth_iexpr_weights: [1.0; 3],
-            min_depth_iexpr_weights: [1.0; 4],
-            iexpr_weights: [1.0; 7],
+            min_depth_iexpr_weights: [1.0; 6],
+            iexpr_weights: [1.0; 9],
 
-            min_depth_vexpr_weights: [1.0; 4],
-            vexpr_weights: [1.0; 5],
+            min_depth_vexpr_weights: [1.0; 6],
+            vexpr_weights: [1.0; 7],
 
             unary_weights: [1.0; 8],
             binary_weights: [1.0; 6],
@@ -151,6 +151,14 @@ impl Parameters {
                     self.gen_binary(rng),
                     Box::new(self.gen_vexpr(rng, max_depth - 1, min_depth - 1)),
                     Box::new(self.gen_vexpr(rng, max_depth - 1, min_depth - 1))),
+                4 => VExpr::IfThenElseI(
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, min_depth - 1)),
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, min_depth - 1)),
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, min_depth - 1))),
+                5 => VExpr::IfThenElseV(
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, min_depth - 1)),
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, min_depth - 1)),
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, min_depth - 1))),
                 _ => unreachable!()
             }
         } else {
@@ -169,6 +177,14 @@ impl Parameters {
                     self.gen_binary(rng),
                     Box::new(self.gen_vexpr(rng, max_depth - 1, 0)),
                     Box::new(self.gen_vexpr(rng, max_depth - 1, 0))),
+                5 => VExpr::IfThenElseI(
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, 0)),
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, 0)),
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, 0))),
+                6 => VExpr::IfThenElseV(
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, 0)),
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, 0)),
+                        Box::new(self.gen_vexpr(rng, max_depth - 1, 0))),
                 _ => unreachable!()
             }
         }
@@ -195,6 +211,13 @@ impl Parameters {
                 3 => IExpr::BinaryV(
                     self.gen_binary(rng),
                     Box::new(self.gen_vexpr(rng, max_depth - 1, min_depth - 1))),
+                4 => IExpr::IfThenElseI(
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, min_depth - 1)),
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, min_depth - 1)),
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, min_depth - 1))),
+                5 => IExpr::IfThenElseV(
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, min_depth - 1)),
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, min_depth - 1))),
                 _ => unreachable!()
             }
         } else {
@@ -212,6 +235,13 @@ impl Parameters {
                     Box::new(self.gen_iexpr(rng, max_depth - 1, 0))),
                 6 => IExpr::BinaryV(
                     self.gen_binary(rng),
+                    Box::new(self.gen_vexpr(rng, max_depth - 1, 0))),
+                7 => IExpr::IfThenElseI(
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, 0)),
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, 0)),
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, 0))),
+                8 => IExpr::IfThenElseV(
+                    Box::new(self.gen_iexpr(rng, max_depth - 1, 0)),
                     Box::new(self.gen_vexpr(rng, max_depth - 1, 0))),
                 _ => unreachable!(),
             }

@@ -45,6 +45,8 @@ impl Display for IExpr {
             UnaryI(op, sub_e) => write!(f, "({} {})", op, sub_e),
             BinaryI(op, e_1, e_2) => write!(f, "({} {} {})", op, e_1, e_2),
             BinaryV(op, sub_e) => write!(f, "({} {})", op, sub_e),
+            IfThenElseI(e_1, e_2, e_3) => write!(f, "(? {} {} {})", e_1, e_2, e_3),
+            IfThenElseV(e_1, e_2) => write!(f, "(? {} {})", e_1, e_2),
         }
     }
 }
@@ -58,6 +60,8 @@ impl Display for VExpr {
             BinaryI(op_1, op_2, e_1, e_2) => write!(f, "[[{} {}] {} {}]", op_1, op_2, e_1, e_2),
             UnaryV(op, sub_e) => write!(f, "[{} {}]", op, sub_e),
             BinaryV(op, e_1, e_2) => write!(f, "[{} {} {}]", op, e_1, e_2),
+            IfThenElseI(e_1, e_2, e_3) => write!(f, "[? {} {} {}]", e_1, e_2, e_3),
+            IfThenElseV(e_1, e_2, e_3) => write!(f, "[? {} {} {}]", e_1, e_2, e_3),
         }
     }
 }
