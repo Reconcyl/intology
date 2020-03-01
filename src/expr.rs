@@ -165,19 +165,27 @@ impl Batch {
                 maximums[ch] = std::cmp::max(maximums[ch], components[ch]);
             }
         }
+        // We use f64s instead of f32s to prevent these subtractions from overflowing.
         let ranges = [
-            (maximums[0] - minimums[0]) as f32,
-            (maximums[1] - minimums[1]) as f32,
-            (maximums[2] - minimums[2]) as f32,
+            maximums[0] as f64 - minimums[0] as f64,
+            maximums[1] as f64 - minimums[1] as f64,
+            maximums[2] as f64 - minimums[2] as f64,
         ];
         for entry in &mut self.entries {
             let item = entry.get_mut(idx);
             let mut components = item.rgb();
             for ch in 0..3 {
                 let channel = &mut components[ch];
-                let relative = (*channel - minimums[ch]) as f32 / ranges[ch];
+                let range = ranges[ch];
+                let relative =
+                    if range == 0.0 { 0.5 }
+                    else { (*channel as f64 - minimums[ch] as f64) / range };
+                if relative < 0.0 || relative > 1.0 {
+                    println!("{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n\n",
+                        minimums, maximums, ranges, channel, relative);
+                }
                 assert!(0.0 <= relative && relative <= 1.0);
-                *channel = (256.0 * relative) as i32;
+                *channel = (255.0 * relative) as i32;
             }
             *item = components.into();
         }
