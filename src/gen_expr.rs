@@ -3,6 +3,7 @@ use rand::Rng;
 use crate::expr::{IExpr, VExpr, Unary, Binary};
 use crate::utils::{self, weighted_choice};
 
+#[derive(Debug)]
 pub struct Parameters {
     root_iexpr_weights: [f32; 3],
     iexpr_weights: [f32; 7],
@@ -36,6 +37,43 @@ impl Parameters {
 
         utils::perturb(rng, &mut self.unary_weights);
         utils::perturb(rng, &mut self.binary_weights);
+    }
+    
+    pub fn mutate<R: Rng>(&self, other: &Self, rng: &mut R) -> Self {
+        let mut new = Self::default();
+
+        utils::mutate(rng,
+            &self   .root_iexpr_weights,
+            &other  .root_iexpr_weights,
+            &mut new.root_iexpr_weights);
+
+        utils::mutate(rng,
+            &self   .iexpr_weights,
+            &other  .iexpr_weights,
+            &mut new.iexpr_weights);
+
+        utils::mutate(rng,
+            &self   .max_depth_iexpr_weights,
+            &other  .max_depth_iexpr_weights,
+            &mut new.max_depth_iexpr_weights);
+
+        utils::mutate(rng,
+            &self   .vexpr_weights,
+            &other  .vexpr_weights,
+            &mut new.vexpr_weights);
+
+        utils::mutate(rng,
+            &self   .unary_weights,
+            &other  .unary_weights,
+            &mut new.unary_weights);
+
+        utils::mutate(rng,
+            &self   .binary_weights,
+            &other  .binary_weights,
+            &mut new.binary_weights);
+
+        new.perturb(rng);
+        new
     }
 
     fn gen_literal<R: Rng>(rng: &mut R) -> IExpr {

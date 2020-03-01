@@ -5,6 +5,15 @@ fn rand_unit<R: Rng>(rng: &mut R) -> f32 {
     rng.sample::<f32, _>(Open01)
 }
 
+pub fn mutate<R: Rng>(rng: &mut R, p1: &[f32], p2: &[f32], out: &mut [f32]) {
+    assert!(p1.len() == p2.len());
+    assert!(p1.len() == out.len());
+
+    for i in 0..p1.len() {
+        out[i] = if rng.gen() { p1 } else { p2 }[i];
+    }
+}
+
 /// Choose an integer `n` from the range 0..weights.len() with probability
 /// proportional to `weights[n]`.
 pub fn weighted_choice<R: Rng>(rng: &mut R, weights: &[f32]) -> usize {

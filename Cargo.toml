@@ -9,3 +9,10 @@ edition = "2018"
 [dependencies]
 rand = "0.7.3"
 png = "0.15.3"
+rouille = "3.0.0"
+rmp-serde = "0.14.3"
+hex = "0.4.2"
+
+[dependencies.serde]
+version = "1.0.104"
+features = ["derive"]

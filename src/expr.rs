@@ -1,8 +1,11 @@
+use serde::{Serialize, Deserialize};
+
 use crate::utils::clamp;
 
 type Color = [i32; 3];
 
 /// An expression that returns a single 32-bit integer.
+#[derive(Serialize, Deserialize)]
 pub enum IExpr {
     Lit(i32),
     Rgb([u8; 3]),
@@ -16,6 +19,7 @@ pub enum IExpr {
 }
 
 /// An expression that returns a pair of 32-bit integers.
+#[derive(Serialize, Deserialize)]
 pub enum VExpr {
     Pixel,
     Swap(Box<VExpr>),
@@ -24,7 +28,7 @@ pub enum VExpr {
     BinaryV(Binary, Box<VExpr>, Box<VExpr>),
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub enum Unary {
     Square,
     Cube,
@@ -52,7 +56,7 @@ impl Unary {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub enum Binary {
     Add,
     Sub,
