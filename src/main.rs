@@ -58,7 +58,7 @@ impl ParamPool {
         let mut rng = rand::thread_rng();
         let entry = &mut self.entries[param_idx];
         if did_approve {
-            entry.upvotes += 1;
+            entry.upvotes += 5;
         } else {
             entry.downvotes += 1;
         }
