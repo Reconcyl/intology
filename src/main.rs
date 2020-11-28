@@ -114,7 +114,7 @@ fn main() {
                 let serialized = try_or_400!(hex::decode(&serialized_hex));
                 let expr: expr::IExpr = try_or_400!(rmp_serde::from_slice(&serialized));
                 let mut png_data = Vec::new();
-                expr.write_image_data(&mut png_data, 256, 256, 4);
+                expr.write_image_data(&mut png_data, 256, 256, 1);
                 Response::from_data("image/png", png_data)
             },
             _ => {
