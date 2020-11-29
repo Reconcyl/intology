@@ -47,7 +47,7 @@ impl Parameters {
         utils::perturb(rng, &mut self.unary_weights);
         utils::perturb(rng, &mut self.binary_weights);
     }
-    
+
     pub fn mutate<R: Rng>(&self, other: &Self, rng: &mut R) -> Self {
         let mut new = Self::default();
 
